@@ -109,7 +109,7 @@
     }
   ],
   "status": "pending",
-  "createdAt": ISODate
+  "createdAt": "ISODate"
 }
 ```
 
@@ -213,12 +213,3 @@ LocalThreads/
 * Designed with care for Indian artisans and small businesses
 
 ---
-
-
----
-
-Let me know if you'd like me to:
-- Export this as a `.md` file,
-- Add real image placeholders,
-- Or include badges (build, license, etc.).
-```
