@@ -74,7 +74,7 @@
 ### `Customers` Collection
 ```json
 {
-  "_id": ObjectId,
+  "_id": "ObjectId",
   "firebaseUid": "string",
   "name": "string",
   "email": "string",
@@ -88,7 +88,7 @@
   "cart": [
     {
       "productId": "string",
-      "quantity": number
+      "quantity": "number"
     }
   ]
 }
@@ -98,7 +98,7 @@
 
 ```json
 {
-  "_id": ObjectId,
+  "_id": "ObjectId",
   "customerId": "ObjectId",
   "shopkeeperId": "ObjectId",
   "products": [
@@ -117,13 +117,13 @@
 
 ```json
 {
-  "_id": ObjectId,
+  "_id": "ObjectId",
   "name": "string",
   "description": "string",
-  "price": number,
-  "categoryId": "ObjectId",
+  "price": "number",
+  "categoryId": "string",
   "shopkeeperId": "ObjectId",
-  "isDeleted": false,
+  "isDeleted": "false",
   "images": [ "url1", "url2" ]
 }
 ```
@@ -166,7 +166,7 @@ LocalThreads/
 ├── Controllers/
 │   ├── CustomerController.cs
 │   ├── ShopkeeperController.cs
-│   └── OrdersController.cs
+│   └── SharedController.cs
 ├── Models/
 │   ├── Customer/
 │   ├── Shopkeeper/
@@ -203,22 +203,17 @@ LocalThreads/
 ## 🌐 Frontend (React – Coming Soon)
 
 > Will be hosted separately in `/frontend` folder of the repo.
-> Expected stack: **React + TailwindCSS + Firebase**
+> Expected stack: **React + Firebase**
 
 ---
 
 ## 🙌 Credits
 
-* Built by [Your Name](https://github.com/yourusername)
+* Built by Jaikrishna Binnar(https://github.com/jaikrushna)
 * Designed with care for Indian artisans and small businesses
 
 ---
 
-## 📃 License
-
-This project is licensed under the [MIT License](LICENSE).
-
-```
 
 ---
 
