@@ -104,8 +104,8 @@
   "products": [
     {
       "productId": "string",
-      "quantity": number,
-      "price": number
+      "quantity": "number",
+      "price": "number"
     }
   ],
   "status": "pending",
