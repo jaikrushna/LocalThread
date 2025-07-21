@@ -7,9 +7,9 @@
 
 ## 📸 Preview
 
-![Landing Page](./assets/landing-page.png)
-![Shopkeeper Registration Page](./assets/product-listing.png)
-![Product Details Page](./assets/wishlist.png)
+![Landing Page](./assets/Landing.png)
+![Shopkeeper Registration Page](./assets/Registration.png)
+![Product Details Page](./assets/Details.png)
 
 ---
 
