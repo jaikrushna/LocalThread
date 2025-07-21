@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Threads | Summer Linen Shirt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a9d9c;
+            --primary-dark: #3a8d8c;
+            --accent: #FF6B6B;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --light: #ffffff;
+            --light-gray: #f9fafb;
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--light);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* Main Content Layout */
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .product-gallery {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            height: 500px;
+            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .product-details-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* Product Gallery */
+        .product-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .image-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background-color: var(--light);
+            transform: scale(1.2);
+        }
+
+        /* Product Details */
+        .product-details {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .product-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text);
+            max-width: 80%;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .favorite-btn.favorited {
+            color: var(--accent);
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .size-section {
+            margin: 25px 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .size-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .size-option {
+            width: 60px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .size-option:hover, .size-option.selected {
+            border-color: var(--primary);
+            background-color: var(--primary);
+            color: var(--light);
+            transform: translateY(-3px);
+        }
+
+        /* Quantity Selector */
+        .quantity-section {
+            margin: 25px 0;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #e0e0e0;
+            background: none;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .quantity-value {
+            font-size: 1.2rem;
+            font-weight: 500;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .total-price {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .total-price span {
+            color: var(--primary);
+        }
+
+        .product-description {
+            margin: 30px 0;
+            color: var(--text-light);
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .features {
+            margin: 30px 0;
+        }
+
+        .features ul {
+            list-style-type: none;
+            margin: 15px 0;
+            color: var(--text-light);
+        }
+
+        .features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Seller Info */
+        .seller-info {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .seller-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .shop-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .distance-badge {
+            background-color: var(--light-gray);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            color: #FFC107;
+            font-size: 1.1rem;
+        }
+
+        .rating-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .rating-count {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .seller-description {
+            color: var(--text-light);
+            margin-top: 20px;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 18px;
+            border-radius: var(--border-radius-sm);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: none;
+        }
+
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #1da653;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .request-btn {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 157, 156, 0.3);
+        }
+
+        .request-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 157, 156, 0.4);
+        }
+
+        /* Map Section */
+        .map-section {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .map-header {
+            padding: 18px 25px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-preview {
+            height: 280px;
+            background: linear-gradient(135deg, #e4e8f0, #d1d9e6);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-marker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #25D366;
+            font-size: 3.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: pulse 2s infinite;
+        }
+
+        .map-address {
+            padding: 18px 25px;
+            font-size: 1.05rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .overall-rating {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .rating-badge {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .rating-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rating-stats {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating-bar-container {
+            width: 200px;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .rating-bar {
+            height: 100%;
+            background-color: var(--primary);
+        }
+
+        .review-list {
+            margin-top: 30px;
+        }
+
+        .review-card {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .reviewer-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .review-rating {
+            color: #FFC107;
+        }
+
+        .review-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .review-content {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Recommendations */
+        .recommendations {
+            margin: 50px 0 30px;
+        }
+
+        .recommended-products {
+            display: flex;
+            gap: 25px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scrollbar-width: thin;
+        }
+
+        .recommended-card {
+            min-width: 220px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .recommended-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommended-image {
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .recommended-info {
+            padding: 20px;
+        }
+
+        .recommended-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recommended-price {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .shop-badge {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Footer Styles */
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .app-badges {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .app-badge {
+            background: white;
+            border-radius: var(--border-radius-sm);
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .app-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-badge i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .product-gallery {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .product-gallery {
+                height: 320px;
+            }
+            
+            .product-title {
+                font-size: 1.8rem;
+            }
+            
+            .size-option {
+                width: 50px;
+                height: 40px;
+            }
+            
+            .map-preview {
+                height: 200px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Local<span>Threads</span></a>
+                
+                <nav class="nav-links">
+                    <a href="#">New Arrivals</a>
+                    <a href="#">Collections</a>
+                    <a href="#">Deals</a>
+                    <a href="#">Local Makers</a>
+                </nav>
+                
+                <div class="header-icons">
+                    <button class="icon-btn">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">3</span>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Details -->
+    <div class="container">
+        <div class="product-container">
+            <!-- Product Gallery -->
+            <div class="product-gallery">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 24 24'%3E%3Cpath fill='%23d1d9e0' d='M18 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2z'/%3E%3Ccircle cx='12' cy='12' r='5' fill='%23b8c2cc'/%3E%3Cpath fill='%23b8c2cc' d='M12 8a1 1 0 1 0 0-2a1 1 0 0 0 0 2zm0 10a1 1 0 1 0 0-2a1 1 0 0 0 0 2zm4-5a1 1 0 1 0 0-2a1 1 0 0 0 0 2zm-8 0a1 1 0 1 0 0-2a1 1 0 0 0 0 2z'/%3E%3C/svg%3E" 
+                     alt="Summer Linen Shirt" class="product-image">
+                <div class="image-indicators">
+                    <div class="indicator active"></div>
+                    <div class="indicator"></div>
+                    <div class="indicator"></div>
+                    <div class="indicator"></div>
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="product-details-section">
+                <div class="product-details">
+                    <div class="product-header">
+                        <h1 class="product-title">Summer Linen Shirt</h1>
+                        <button class="favorite-btn" id="favoriteBtn">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="product-price">$34.99</div>
+                    
+                    <div class="size-section">
+                        <div class="section-title">Select Size</div>
+                        <div class="size-options">
+                            <div class="size-option">S</div>
+                            <div class="size-option selected">M</div>
+                            <div class="size-option">L</div>
+                            <div class="size-option">XL</div>
+                            <div class="size-option">XXL</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quantity-section">
+                        <div class="section-title">Quantity</div>
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" id="decreaseBtn">-</button>
+                            <div class="quantity-value" id="quantity">1</div>
+                            <button class="quantity-btn" id="increaseBtn">+</button>
+                        </div>
+                        <div class="total-price">
+                            Total: <span id="totalPrice">$34.99</span>
+                        </div>
+                    </div>
+                    
+                    <div class="features">
+                        <div class="section-title">Features</div>
+                        <ul>
+                            <li>
+                                <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                                100% natural linen
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                                Machine washable
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                                Eco-friendly production
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                                Available in 5 colors
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <p class="product-description">
+                        Made from premium linen fabric, this shirt is perfect for warm weather. Features a relaxed fit, button-down collar, and two chest pockets. Designed locally and ethically produced by Urban Threads Collective.
+                    </p>
+                </div>
+
+                <!-- Seller Information -->
+                <div class="seller-info">
+                    <div class="seller-header">
+                        <div class="shop-name">Urban Threads Collective</div>
+                        <div class="distance-badge">
+                            <i class="fas fa-location-dot"></i> 1.8 km from you
+                        </div>
+                    </div>
+                    
+                    <div class="rating-section">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-value">4.7</div>
+                        <div class="rating-count">(142 reviews)</div>
+                    </div>
+                    
+                    <p class="seller-description">
+                        Local independent boutique specializing in sustainable clothing. All items are designed and crafted within our community using eco-friendly materials.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn request-btn">
+                        <i class="fas fa-shopping-bag"></i> Request Order
+                    </button>
+                    <button class="action-btn whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                    </button>
+                </div>
+
+                <!-- Map Section -->
+                <div class="map-section">
+                    <div class="map-header">
+                        <i class="fas fa-map-location-dot"></i> Shop Location
+                    </div>
+                    <div class="map-preview">
+                        <i class="fas fa-map-marker-alt map-marker"></i>
+                    </div>
+                    <div class="map-address">
+                        <i class="fas fa-map-pin" style="color: #25D366;"></i>
+                        123 Fashion Street, Downtown District
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="reviews-section">
+                    <div class="section-header">
+                        <div class="section-title">Customer Reviews</div>
+                        <a href="#" class="see-all">See all</a>
+                    </div>
+                    
+                    <div class="overall-rating">
+                        <div class="rating-badge">4.7</div>
+                        <div class="rating-details">
+                            <div class="rating-stats">
+                                <span>5 stars</span>
+                                <div class="rating-bar-container">
+                                    <div class="rating-bar" style="width: 85%;"></div>
+                                </div>
+                                <span>85%</span>
+                            </div>
+                            <div class="rating-stats">
+                                <span>4 stars</span>
+                                <div class="rating-bar-container">
+                                    <div class="rating-bar" style="width: 12%;"></div>
+                                </div>
+                                <span>12%</span>
+                            </div>
+                            <div class="rating-stats">
+                                <span>3 stars</span>
+                                <div class="rating-bar-container">
+                                    <div class="rating-bar" style="width: 2%;"></div>
+                                </div>
+                                <span>2%</span>
+                            </div>
+                            <div class="rating-stats">
+                                <span>2 stars</span>
+                                <div class="rating-bar-container">
+                                    <div class="rating-bar" style="width: 1%;"></div>
+                                </div>
+                                <span>1%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="review-list">
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="reviewer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="reviewer-info">
+                                    <div class="reviewer-name">Sarah Johnson</div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <div class="review-date">2 days ago</div>
+                            </div>
+                            <div class="review-content">
+                                Absolutely love this shirt! The fabric is so breathable and perfect for summer. The fit is exactly as described. Will definitely be buying more from this local seller.
+                            </div>
+                        </div>
+                        
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="reviewer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="reviewer-info">
+                                    <div class="reviewer-name">Michael Chen</div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="review-date">1 week ago</div>
+                            </div>
+                            <div class="review-content">
+                                Great quality shirt with a perfect fit. The material is lightweight and comfortable. The seller was very responsive when I had a question about sizing. Will recommend to friends!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="recommendations">
+            <div class="section-header">
+                <div class="section-title">You May Also Like</div>
+                <a href="#" class="see-all">See all</a>
+            </div>
+            
+            <div class="recommended-products">
+                <div class="recommended-card">
+                    <div class="recommended-image">
+                        <i class="fas fa-tshirt fa-3x" style="color: #d1d9e0;"></i>
+                    </div>
+                    <div class="recommended-info">
+                        <div class="recommended-title">Cotton Short Sleeve Tee</div>
+                        <div class="recommended-price">$22.99</div>
+                        <div class="shop-badge">
+                            <i class="fas fa-store"></i> Urban Threads
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommended-card">
+                    <div class="recommended-image">
+                        <i class="fas fa-vest fa-3x" style="color: #d1d9e0;"></i>
+                    </div>
+                    <div class="recommended-info">
+                        <div class="recommended-title">Lightweight Denim Jacket</div>
+                        <div class="recommended-price">$45.99</div>
+                        <div class="shop-badge">
+                            <i class="fas fa-store"></i> Denim Masters
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommended-card">
+                    <div class="recommended-image">
+                        <i class="fas fa-hat-cowboy fa-3x" style="color: #d1d9e0;"></i>
+                    </div>
+                    <div class="recommended-info">
+                        <div class="recommended-title">Straw Summer Hat</div>
+                        <div class="recommended-price">$29.99</div>
+                        <div class="shop-badge">
+                            <i class="fas fa-store"></i> Accessory Hub
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommended-card">
+                    <div class="recommended-image">
+                        <i class="fas fa-socks fa-3x" style="color: #d1d9e0;"></i>
+                    </div>
+                    <div class="recommended-info">
+                        <div class="recommended-title">Patterned Cotton Socks</div>
+                        <div class="recommended-price">$12.99</div>
+                        <div class="shop-badge">
+                            <i class="fas fa-store"></i> Sock Haven
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Men</a></li>
+                        <li><a href="#">Women</a></li>
+                        <li><a href="#">Children</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Information</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Customer Service</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Track Orders</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <p>Follow us on social media for updates and promotions</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                    
+                    <h3 style="margin-top: 25px;">Get the App</h3>
+                    <div class="app-badges">
+                        <a href="#" class="app-badge">
+                            <i class="fab fa-apple"></i>
+                            <span>App Store</span>
+                        </a>
+                        <a href="#" class="app-badge">
+                            <i class="fab fa-google-play"></i>
+                            <span>Google Play</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Local Threads. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product price and quantity handling
+        const productPrice = 34.99;
+        let quantity = 1;
+        
+        const quantityElement = document.getElementById('quantity');
+        const totalPriceElement = document.getElementById('totalPrice');
+        const decreaseBtn = document.getElementById('decreaseBtn');
+        const increaseBtn = document.getElementById('increaseBtn');
+        
+        function updateTotalPrice() {
+            const total = (productPrice * quantity).toFixed(2);
+            totalPriceElement.textContent = `$${total}`;
+        }
+        
+        decreaseBtn.addEventListener('click', () => {
+            if (quantity > 1) {
+                quantity--;
+                quantityElement.textContent = quantity;
+                updateTotalPrice();
+            }
+        });
+        
+        increaseBtn.addEventListener('click', () => {
+            quantity++;
+            quantityElement.textContent = quantity;
+            updateTotalPrice();
+        });
+        
+        // Favorite button functionality
+        const favoriteBtn = document.getElementById('favoriteBtn');
+        favoriteBtn.addEventListener('click', () => {
+            favoriteBtn.classList.toggle('favorited');
+            if (favoriteBtn.classList.contains('favorited')) {
+                alert('Added to favorites!');
+            } else {
+                alert('Removed from favorites!');
+            }
+        });
+        
+        // Size selector functionality
+        document.querySelectorAll('.size-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.size-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+            });
+        });
+        
+        // Action buttons functionality
+        const requestBtn = document.querySelector('.request-btn');
+        const whatsappBtn = document.querySelector('.whatsapp-btn');
+        
+        requestBtn.addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check"></i> Order Requested!';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-shopping-bag"></i> Request Order';
+                }, 2000);
+            }, 1500);
+        });
+        
+        whatsappBtn.addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fab fa-whatsapp"></i> Opening...';
+            this.style.backgroundColor = '#128C7E';
+            
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.style.backgroundColor = '';
+                alert('Opening WhatsApp to contact the seller');
+            }, 1500);
+        });
+        
+        // Initialize total price
+        updateTotalPrice();
+    </script>
+</body>
+</html>

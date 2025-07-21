@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Threads - Authenticate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --coral: #FF6B6B;
+            --teal: #4ECDC4;
+            --light-coral: #ffdede;
+            --light-teal: #e0f6f4;
+            --dark-gray: #333333;
+            --mid-gray: #666666;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --radius: 16px;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-coral), var(--light-teal));
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .brand-panel {
+            flex: 1;
+            background: linear-gradient(135deg, var(--coral), var(--teal));
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .brand-panel h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-panel p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 350px;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            color: var(--dark-gray);
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: var(--mid-gray);
+            font-size: 1rem;
+        }
+
+        .form-toggle {
+            display: flex;
+            background: var(--light-gray);
+            border-radius: 50px;
+            padding: 6px;
+            margin-bottom: 30px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            color: var(--coral);
+        }
+
+        .form-content {
+            flex: 1;
+        }
+
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-gray);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .phone-input-container {
+            display: flex;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .country-code {
+            padding: 0 16px;
+            background: var(--light-gray);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--mid-gray);
+            border-right: 1px solid #e0e0e0;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #bbbbbb;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: var(--coral);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: var(--mid-gray);
+            font-size: 0.9rem;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: var(--mid-gray);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            padding: 0 15px;
+            font-size: 0.9rem;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--mid-gray);
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .brand-panel {
+                padding: 30px 20px;
+            }
+            
+            .form-container {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand-panel">
+            <div class="logo">
+                <i class="fas fa-threads"></i>
+            </div>
+            <h1>Local Threads</h1>
+            <p>Connect with your community through meaningful conversations</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-header">
+                <h2 id="form-title">Welcome to Local Threads</h2>
+                <p id="form-subtitle">Enter your phone number to get started</p>
+            </div>
+            
+            <div class="form-toggle">
+                <div class="toggle-btn active" id="login-toggle">Login</div>
+                <div class="toggle-btn" id="register-toggle">Register</div>
+            </div>
+            
+            <div class="form-content">
+                <!-- Login Form -->
+                <div class="form active" id="login-form">
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <div class="phone-input-container">
+                            <div class="country-code">+91</div>
+                            <input type="tel" placeholder="Enter your phone number">
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary">Send OTP</button>
+                    
+                    <div class="security-note">
+                        <i class="fas fa-lock"></i>
+                        <span>Your information is securely protected</span>
+                    </div>
+                </div>
+                
+                <!-- Registration Form -->
+                <div class="form" id="register-form">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <div class="phone-input-container">
+                            <div class="country-code">+91</div>
+                            <input type="tel" placeholder="Enter your phone number">
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary">Create Account</button>
+                    
+                    <div class="security-note">
+                        <i class="fas fa-lock"></i>
+                        <span>Your information is securely protected</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-footer">
+                <p>By continuing, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginToggle = document.getElementById('login-toggle');
+            const registerToggle = document.getElementById('register-toggle');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const formTitle = document.getElementById('form-title');
+            const formSubtitle = document.getElementById('form-subtitle');
+            
+            loginToggle.addEventListener('click', function() {
+                loginToggle.classList.add('active');
+                registerToggle.classList.remove('active');
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                formTitle.textContent = "Welcome to Local Threads";
+                formSubtitle.textContent = "Enter your phone number to get started";
+            });
+            
+            registerToggle.addEventListener('click', function() {
+                registerToggle.classList.add('active');
+                loginToggle.classList.remove('active');
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+                formTitle.textContent = "Create Your Account";
+                formSubtitle.textContent = "Join our community today";
+            });
+        });
+    </script>
+</body>
+</html>

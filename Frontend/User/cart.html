@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - Local Threads</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a9d9c;
+            --primary-dark: #3a8d8c;
+            --accent: #FF6B6B;
+            --success: #25D366;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --light: #ffffff;
+            --light-gray: #f9fafb;
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--light);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .favorites-active {
+            color: var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 40px 0 30px;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .page-description {
+            color: var(--text-light);
+            max-width: 600px;
+        }
+
+        /* Address Section */
+        .address-box {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .address-info h2 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .address-info h2 i {
+            color: var(--primary);
+        }
+
+        .address-text {
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .change-address-btn {
+            background: rgba(74, 157, 156, 0.1);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 12px 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .change-address-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Cart Content */
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding-bottom: 60px;
+        }
+
+        .cart-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        .cart-items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-summary {
+            width: 350px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            align-self: flex-start;
+        }
+
+        .cart-item {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 20px;
+        }
+
+        .product-img {
+            width: 120px;
+            height: 140px;
+            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .product-img i {
+            font-size: 2.5rem;
+            color: #d1d9e0;
+        }
+
+        .product-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .product-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .discounted-price {
+            color: var(--text-light);
+            text-decoration: line-through;
+            font-size: 0.95rem;
+            margin-right: 10px;
+        }
+
+        .item-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid #e0e0e0;
+            background: var(--light);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .stock-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .in-stock {
+            color: var(--success);
+        }
+
+        .low-stock {
+            color: #FF9800;
+        }
+
+        .out-of-stock {
+            color: var(--accent);
+        }
+
+        .delivery-info {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .return-info {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .remove-btn:hover {
+            color: var(--accent);
+        }
+
+        .wishlist-btn:hover {
+            color: var(--accent);
+        }
+
+        /* Summary Section */
+        .summary-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .summary-total {
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .place-order-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 14px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .place-order-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .cart-content {
+                flex-direction: column;
+            }
+            
+            .cart-summary {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+            }
+            
+            .product-img {
+                width: 100%;
+                height: 180px;
+            }
+            
+            .address-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .item-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Local<span>Threads</span></a>
+                
+                <div class="header-icons">
+                    <button class="icon-btn">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">3</span>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="container">
+        <div class="page-header">
+            <h1>Shopping Cart</h1>
+            <p class="page-description">Review your items before checkout</p>
+        </div>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="container">
+        <div class="cart-container">
+            <!-- Address Box -->
+            <div class="address-box">
+                <div class="address-info">
+                    <h2><i class="fas fa-map-marker-alt"></i> Delivery Address</h2>
+                    <p class="address-text">Sarah Johnson, 123 Fashion Street, Apt 4B</p>
+                    <p class="address-text">New York, NY 10001, United States</p>
+                </div>
+                <button class="change-address-btn">
+                    <i class="fas fa-edit"></i> Change Address
+                </button>
+            </div>
+
+            <div class="cart-content">
+                <!-- Cart Items -->
+                <div class="cart-items">
+                    <!-- Cart Item 1 -->
+                    <div class="cart-item">
+                        <div class="product-img">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <div class="product-details">
+                            <div class="product-title">Summer Linen Shirt</div>
+                            <div class="product-price">
+                                <span class="discounted-price">$44.99</span> $34.99
+                            </div>
+                            
+                            <div class="item-controls">
+                                <div class="control-group">
+                                    <label>Quantity</label>
+                                    <select>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option selected>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                        <option>6</option>
+                                        <option>7</option>
+                                        <option>8</option>
+                                        <option>9</option>
+                                        <option>10</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="control-group">
+                                    <label>Size</label>
+                                    <select>
+                                        <option>S</option>
+                                        <option selected>M</option>
+                                        <option>L</option>
+                                        <option>XL</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="stock-info">
+                                <div class="stock-status in-stock">
+                                    <i class="fas fa-check-circle"></i> In Stock
+                                </div>
+                                <div class="delivery-info">
+                                    <i class="fas fa-truck"></i> Delivery by 6 Jul 2025
+                                </div>
+                                <div class="return-info">
+                                    <i class="fas fa-undo"></i> 14 days return
+                                </div>
+                            </div>
+                            
+                            <div class="item-actions">
+                                <button class="action-btn remove-btn">
+                                    <i class="fas fa-trash-alt"></i> Remove
+                                </button>
+                                <button class="action-btn wishlist-btn">
+                                    <i class="fas fa-heart"></i> Move to Wishlist
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cart Item 2 -->
+                    <div class="cart-item">
+                        <div class="product-img">
+                            <i class="fas fa-vest"></i>
+                        </div>
+                        <div class="product-details">
+                            <div class="product-title">Denim Jacket</div>
+                            <div class="product-price">$59.99</div>
+                            
+                            <div class="item-controls">
+                                <div class="control-group">
+                                    <label>Quantity</label>
+                                    <select>
+                                        <option selected>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="control-group">
+                                    <label>Size</label>
+                                    <select>
+                                        <option>S</option>
+                                        <option selected>M</option>
+                                        <option>L</option>
+                                        <option>XL</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="stock-info">
+                                <div class="stock-status low-stock">
+                                    <i class="fas fa-exclamation-circle"></i> Only 2 left
+                                </div>
+                                <div class="delivery-info">
+                                    <i class="fas fa-truck"></i> Delivery by 8 Jul 2025
+                                </div>
+                                <div class="return-info">
+                                    <i class="fas fa-undo"></i> 14 days return
+                                </div>
+                            </div>
+                            
+                            <div class="item-actions">
+                                <button class="action-btn remove-btn">
+                                    <i class="fas fa-trash-alt"></i> Remove
+                                </button>
+                                <button class="action-btn wishlist-btn">
+                                    <i class="fas fa-heart"></i> Move to Wishlist
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cart Item 3 -->
+                    <div class="cart-item">
+                        <div class="product-img">
+                            <i class="fas fa-socks"></i>
+                        </div>
+                        <div class="product-details">
+                            <div class="product-title">Patterned Cotton Socks</div>
+                            <div class="product-price">$12.99</div>
+                            
+                            <div class="item-controls">
+                                <div class="control-group">
+                                    <label>Quantity</label>
+                                    <select>
+                                        <option>1</option>
+                                        <option selected>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="control-group">
+                                    <label>Size</label>
+                                    <select>
+                                        <option>S</option>
+                                        <option selected>M</option>
+                                        <option>L</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="stock-info">
+                                <div class="stock-status out-of-stock">
+                                    <i class="fas fa-times-circle"></i> Out of Stock
+                                </div>
+                                <div class="delivery-info">
+                                    <i class="fas fa-truck"></i> Delivery by 10 Jul 2025
+                                </div>
+                                <div class="return-info">
+                                    <i class="fas fa-undo"></i> 14 days return
+                                </div>
+                            </div>
+                            
+                            <div class="item-actions">
+                                <button class="action-btn remove-btn">
+                                    <i class="fas fa-trash-alt"></i> Remove
+                                </button>
+                                <button class="action-btn wishlist-btn">
+                                    <i class="fas fa-heart"></i> Move to Wishlist
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <div class="summary-header">Order Summary</div>
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Subtotal (3 items)</span>
+                            <span>$117.97</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax</span>
+                            <span>$8.26</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span>Total</span>
+                            <span>$126.23</span>
+                        </div>
+                    </div>
+                    <button class="place-order-btn">
+                        <i class="fas fa-lock"></i> Place Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Customer Service</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Track Orders</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>About Local Threads</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Local Makers</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <p>Follow us for updates and promotions</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Local Threads. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Remove item functionality
+        const removeButtons = document.querySelectorAll('.remove-btn');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const cartItem = this.closest('.cart-item');
+                cartItem.style.opacity = '0';
+                cartItem.style.transform = 'translateX(-100px)';
+                
+                setTimeout(() => {
+                    cartItem.remove();
+                    // Update cart count
+                    const cartCount = document.querySelector('.cart-count');
+                    let currentCount = parseInt(cartCount.textContent);
+                    cartCount.textContent = currentCount - 1;
+                    
+                    // Update summary
+                    updateCartSummary();
+                    
+                    // Show empty cart message if needed
+                    if (document.querySelectorAll('.cart-item').length === 0) {
+                        document.querySelector('.cart-items').innerHTML = `
+                            <div class="empty-cart" style="background: var(--light); border-radius: var(--border-radius); padding: 60px 20px; text-align: center; box-shadow: var(--shadow);">
+                                <div class="empty-icon" style="font-size: 4rem; color: #d1d9e0; margin-bottom: 20px;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 15px;">Your Cart is Empty</h2>
+                                <p style="color: var(--text-light); margin-bottom: 25px; max-width: 500px; margin: 0 auto 25px;">
+                                    Looks like you haven't added anything to your cart yet
+                                </p>
+                                <button class="browse-btn" style="background: var(--primary); color: white; border: none; border-radius: var(--border-radius-sm); padding: 12px 30px; font-weight: 500; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-store"></i> Browse Local Shops
+                                </button>
+                            </div>
+                        `;
+                    }
+                }, 300);
+            });
+        });
+        
+        // Move to wishlist functionality
+        const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+        wishlistButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const cartItem = this.closest('.cart-item');
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Moving...';
+                
+                setTimeout(() => {
+                    cartItem.style.opacity = '0';
+                    cartItem.style.transform = 'translateX(-100px)';
+                    
+                    setTimeout(() => {
+                        cartItem.remove();
+                        // Update cart count
+                        const cartCount = document.querySelector('.cart-count');
+                        let currentCount = parseInt(cartCount.textContent);
+                        cartCount.textContent = currentCount - 1;
+                        
+                        // Update summary
+                        updateCartSummary();
+                        
+                        // Show notification
+                        showNotification('Item moved to your wishlist');
+                    }, 300);
+                }, 1000);
+            });
+        });
+        
+        // Quantity change
+        const quantitySelects = document.querySelectorAll('select');
+        quantitySelects.forEach(select => {
+            select.addEventListener('change', function() {
+                // In a real app, you would update the cart total here
+                updateCartSummary();
+            });
+        });
+        
+        // Update cart summary
+        function updateCartSummary() {
+            // This is simplified for the demo
+            const items = document.querySelectorAll('.cart-item');
+            const subtotal = items.length * 39.99; // Simplified calculation
+            
+            if (items.length > 0) {
+                document.querySelector('.summary-row:nth-child(1) span:last-child').textContent = `$${(subtotal).toFixed(2)}`;
+                document.querySelector('.summary-total span:last-child').textContent = `$${(subtotal * 1.07).toFixed(2)}`;
+                document.querySelector('.summary-row:nth-child(1) span:first-child').textContent = `Subtotal (${items.length} items)`;
+            } else {
+                document.querySelector('.cart-summary').innerHTML = `
+                    <div class="summary-header">Order Summary</div>
+                    <div style="text-align: center; padding: 30px 0; color: var(--text-light);">
+                        <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Place order button
+        const placeOrderBtn = document.querySelector('.place-order-btn');
+        placeOrderBtn.addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            this.disabled = true;
+            
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check"></i> Order Placed!';
+                showNotification('Your order has been placed successfully!');
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }, 2000);
+            }, 2000);
+        });
+        
+        // Change address button
+        const changeAddressBtn = document.querySelector('.change-address-btn');
+        changeAddressBtn.addEventListener('click', function() {
+            showNotification('Address change functionality would open here');
+        });
+        
+        // Notification function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = 'var(--primary)';
+            notification.style.color = 'white';
+            notification.style.padding = '15px 25px';
+            notification.style.borderRadius = 'var(--border-radius-sm)';
+            notification.style.boxShadow = 'var(--shadow)';
+            notification.style.zIndex = '1000';
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(20px)';
+            notification.style.transition = 'var(--transition)';
+            notification.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const headerIcons = document.querySelector('.header-icons');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            headerIcons.style.display = headerIcons.style.display === 'flex' ? 'none' : 'flex';
+        });
+    </script>
+</body>
+</html>

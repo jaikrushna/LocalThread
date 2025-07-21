@@ -1,0 +1,21 @@
+# 🔒 Secret Firebase config
+Configurations/
+
+# 🔧 Local environment settings
+appsettings.json
+appsettings.Development.json
+
+# 🔄 Build artifacts
+bin/
+obj/
+
+# 🙅‍♂️ User-specific IDE files
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+Frontend/firebaseotp.html
+Frontend/Firebase_config.txt
+
+node_modules/

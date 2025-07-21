@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopkeeper Registration - Local Threads</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a9d9c;
+            --primary-dark: #3a8d8c;
+            --accent: #FF6B6B;
+            --success: #25D366;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --light: #ffffff;
+            --light-gray: #f9fafb;
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--light);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .registration-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .registration-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 50px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .registration-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .registration-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .registration-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .verification-badge {
+            background: linear-gradient(135deg, var(--primary), #3a8d8c);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 10px;
+        }
+
+        .verification-badge i {
+            color: #FFD700;
+        }
+
+        .registration-header p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .security-note {
+            background-color: #f0f8ff;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: var(--border-radius-sm);
+            margin: 20px 0 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .security-note i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+
+        /* Form Layout */
+        .registration-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .required::after {
+            content: '*';
+            color: var(--accent);
+            margin-left: 4px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid #e0e0e0;
+            background: var(--light);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 157, 156, 0.15);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon input {
+            padding-right: 50px;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .input-icon:hover {
+            color: var(--primary);
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: var(--border-radius-sm);
+            padding: 25px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: rgba(74, 157, 156, 0.03);
+        }
+
+        .file-upload i {
+            font-size: 2.5rem;
+            color: #d1d9e0;
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .file-upload:hover i {
+            color: var(--primary);
+        }
+
+        .file-upload p {
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .file-upload small {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-top: 5px;
+        }
+
+        .checkbox-group label {
+            font-weight: 400;
+        }
+
+        .checkbox-group a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 16px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .registration-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .registration-card {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .registration-header h1 {
+                font-size: 1.8rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .registration-card {
+                padding: 35px 25px;
+                margin: 0 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .registration-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Local<span>Threads</span></a>
+                
+                <div class="header-icons">
+                    <button class="icon-btn">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">3</span>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Registration Content -->
+    <main class="registration-container">
+        <div class="registration-card">
+            <div class="registration-header">
+                <h1>
+                    Shopkeeper Registration
+                    <span class="verification-badge">
+                        <i class="fas fa-shield-alt"></i> KYC Verification Required
+                    </span>
+                </h1>
+                <p>Join our verified network of local shopkeepers. All applications are manually reviewed to ensure quality and legitimacy.</p>
+            </div>
+            
+            <div class="security-note">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Admin approval may take 24-48 hours.</strong> You'll be notified by SMS once your shop is verified. All information is securely encrypted and only used for verification purposes.
+                </div>
+            </div>
+            
+            <form class="registration-form">
+                <!-- Left Column -->
+                <div class="form-group">
+                    <label class="required" for="full-name">
+                        <i class="fas fa-user"></i> Full Name
+                    </label>
+                    <input type="text" id="full-name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="shop-name">
+                        <i class="fas fa-store"></i> Shop Name
+                    </label>
+                    <input type="text" id="shop-name" placeholder="Enter your shop name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="phone">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <input type="tel" id="phone" placeholder="+91 9876543210" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="id-type">
+                        <i class="fas fa-id-card"></i> Government ID Type
+                    </label>
+                    <select id="id-type" required>
+                        <option value="">Select ID type</option>
+                        <option>Aadhar Card</option>
+                        <option>PAN Card</option>
+                        <option>Driving License</option>
+                        <option>Voter ID</option>
+                        <option>Passport</option>
+                    </select>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="form-group">
+                    <label class="required" for="address">
+                        <i class="fas fa-map-marker-alt"></i> Shop Address
+                    </label>
+                    <div class="input-with-icon">
+                        <input type="text" id="address" placeholder="Enter full shop address" required>
+                        <div class="input-icon" title="Pin location on map">
+                            <i class="fas fa-map-pin"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="business-desc">
+                        <i class="fas fa-file-alt"></i> Business Description
+                    </label>
+                    <textarea id="business-desc" rows="3" placeholder="Describe your business (products, specialties, etc.)" required></textarea>
+                </div>
+                
+                <!-- Full Width Elements -->
+                <div class="form-group full-width">
+                    <label class="required" for="govt-id">
+                        <i class="fas fa-file-upload"></i> Upload Government ID
+                    </label>
+                    <div class="file-upload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag & drop</p>
+                        <small>JPG, PNG or PDF (Max 5MB)</small>
+                        <input type="file" class="file-input" id="govt-id" accept=".jpg,.jpeg,.png,.pdf" required>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label class="required" for="shop-photo">
+                        <i class="fas fa-camera"></i> Shop Front Photo
+                    </label>
+                    <div class="file-upload">
+                        <i class="fas fa-image"></i>
+                        <p>Upload a clear photo of your shop front</p>
+                        <small>JPG or PNG (Max 10MB)</small>
+                        <input type="file" class="file-input" id="shop-photo" accept=".jpg,.jpeg,.png" required>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreement" required>
+                        <label for="agreement">
+                            I confirm this is a legitimate business and agree to verification by admin. I have read and accept the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-lock"></i> Submit for Approval
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Customer Service</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Track Orders</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>About Local Threads</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Local Makers</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <p>Follow us for updates and promotions</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Local Threads. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Form submission handling
+        const registrationForm = document.querySelector('.registration-form');
+        const submitBtn = document.querySelector('.submit-btn');
+        
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+            submitBtn.disabled = true;
+            
+            // Simulate form processing
+            setTimeout(() => {
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted Successfully!';
+                showNotification('Your application has been submitted for admin approval', 'success');
+                
+                // Reset form after success
+                setTimeout(() => {
+                    registrationForm.reset();
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            }, 2000);
+        });
+        
+        // File upload interaction
+        const fileInputs = document.querySelectorAll('.file-input');
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
+                    const container = this.closest('.file-upload');
+                    const icon = container.querySelector('i');
+                    const text = container.querySelector('p');
+                    
+                    // Update UI
+                    icon.className = 'fas fa-file-check';
+                    icon.style.color = 'var(--success)';
+                    text.innerHTML = `File uploaded: <strong>${fileName}</strong>`;
+                }
+            });
+        });
+        
+        // Map pin functionality
+        const mapPin = document.querySelector('.input-icon');
+        mapPin.addEventListener('click', function() {
+            showNotification('Map location selector would open here', 'info');
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const headerIcons = document.querySelector('.header-icons');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            headerIcons.style.display = headerIcons.style.display === 'flex' ? 'none' : 'flex';
+        });
+        
+        // Notification function
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = type === 'error' ? 'var(--accent)' : 
+                                              type === 'success' ? 'var(--success)' : 'var(--primary)';
+            notification.style.color = 'white';
+            notification.style.padding = '15px 25px';
+            notification.style.borderRadius = 'var(--border-radius-sm)';
+            notification.style.boxShadow = 'var(--shadow)';
+            notification.style.zIndex = '1000';
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(20px)';
+            notification.style.transition = 'var(--transition)';
+            notification.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 
+                                              type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
