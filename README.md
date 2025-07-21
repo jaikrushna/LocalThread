@@ -8,8 +8,8 @@
 ## 📸 Preview
 
 ![Landing Page](./assets/landing-page.png)
-![Product Listing](./assets/product-listing.png)
-![Wishlist Page](./assets/wishlist.png)
+![Shopkeeper Registration Page](./assets/product-listing.png)
+![Product Details Page](./assets/wishlist.png)
 
 ---
 
